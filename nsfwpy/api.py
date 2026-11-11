@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
+import time
 from typing import List, Dict, Optional
 import os
 import gc
+
+from loguru import logger
 from pydantic import BaseModel
 from fastapi import FastAPI, File, UploadFile, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+
 from . import __version__ as version
 from .nsfw import NSFWDetectorONNX
 
@@ -50,6 +56,22 @@ app = FastAPI(
     version=version
 )
 
+class RequestTimerMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        start_time = time.time()
+
+        response = await call_next(request)  # 执行请求处理链
+
+        process_time = time.time() - start_time
+        formatted_time = f"{process_time * 1000:.2f}ms"
+
+        logger.info(f"{request.method} {request.url.path} - 耗时: {formatted_time}")
+
+        # 可以添加到响应头中返回
+        response.headers["X-Process-Time"] = formatted_time
+        return response
+
+app.add_middleware(RequestTimerMiddleware)
 
 # 添加CORS支持
 app.add_middleware(

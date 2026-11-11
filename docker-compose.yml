@@ -1,0 +1,9 @@
+services:
+  nsfwpy:
+    build: .
+    image: yiminger/nsfwpy
+    ports:
+      - "8000:8000"
+    environment:
+      NSFWPY_MODEL_TYPE: i3
+      TZ: Asia/Shanghai

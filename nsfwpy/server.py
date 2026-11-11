@@ -35,7 +35,7 @@ def main():
     # 只在指定--web参数时启动API服务器
     if args.web:
         # 启动服务器
-        uvicorn.run("nsfwpy.api:app", host=args.host, port=args.port)
+        uvicorn.run("nsfwpy.api:app", host=args.host, port=args.port, access_log=False)
     elif not input_path and not unknown_args:
         parser.print_help()
     else:
