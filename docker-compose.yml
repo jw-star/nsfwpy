@@ -5,5 +5,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      NSFWPY_MODEL_TYPE: i3
-      TZ: Asia/Shanghai
+        NSFWPY_MODEL_TYPE: i3
+        NSFWPY_INTRA_THREADS: 1
+        NSFWPY_INTER_THREADS: 1
+        TZ: Asia/Shanghai
